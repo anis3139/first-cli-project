@@ -1,28 +1,52 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Navbar @search="search"></Navbar>
+
+    <div class="container mt-3">
+      <div class="row">
+        <Inventory :items="items" @newItemAdded="addToItem"></Inventory>
+        <Cart :items="cart" @removeItem="removeToItem"></Cart>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Navbar from "./components/Navbar";
+import Cart from "./components/Cart";
+import Inventory from "./components/Inventory";
+import data from "./data.js";
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    Navbar,
+    Cart,
+    Inventory,
+  },
+  data(){
+    return{
+      items:[],
+      cart:[]
+    }
+  },
+  mounted(){
+    this.items=data
+  },
+  methods:{
+    addToItem(item){
+      this.cart.push(item)
+    },
+    removeToItem(index){
+      this.cart.splice(index, 1)
+    },
+    search(keyword){
+      this.items=data.filter(item=>{
+       return item.title.toLowerCase().indexOf(keyword.toLowerCase()) !== -1
+      })
+    }
+    
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
